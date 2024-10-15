@@ -1,57 +1,48 @@
 <?php
-session_start(); // Inicia a sessão
+require 'conexao.php';
 
-require 'conexao.php'; // Inclui o arquivo de conexão
+$usuario_valido = 'admin';
+$senha_valida = '123456'; 
 
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $username = $_POST['username'];
-    $password = $_POST['password'];
+$mensagem = '';
 
-    // Busca o usuário no banco de dados
-    $stmt = $pdo->prepare("SELECT * FROM usuarios WHERE username = ?");
-    $stmt->execute([$username]);
-    $user = $stmt->fetch(PDO::FETCH_ASSOC);
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    $usuario = $_POST['username'];
+    $senha = $_POST['password'];
 
-    // Verifica se o usuário existe e se a senha está correta
-    if ($user && password_verify($password, $user['password'])) {
-        $_SESSION['loggedin'] = true; // Marca como logado
-        header("Location: index.php"); // Redireciona para a página inicial
+    
+    if ($usuario == $usuario_valido && $senha == $senha_valida) {
+        header("Location: index.php");
         exit;
     } else {
-        $error = "Usuário ou senha inválidos!";
+        $mensagem = "Usuário ou senha incorretos.";
     }
 }
 ?>
 
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-    <title>Login</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Farmácia Vida Saudável</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
-<body>
-    <div class="container mt-5">
-        <h2>Login</h2>
-        <?php if (isset($error)): ?>
-            <div class="alert alert-danger"><?php echo $error; ?></div>
-        <?php endif; ?>
-        <form method="POST">
-            <div class="form-group">
-                <label for="username">Usuário</label>
-                <input type="text" class="form-control" name="username" required>
-            </div>
-            <div class="form-group">
-                <label for="password">Senha</label>
-                <input type="password" class="form-control" name="password" required>
-            </div>
-            <button type="submit" class="btn btn-success">Entrar</button>
-        </form>
-        <a href="index.php" class="btn btn-danger mt-2">Cancelar</a>
-    </div>
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<body class="container">
+    <h1 class="mt-5">Login</h1>
+    <?php if ($mensagem): ?>
+        <div class="alert alert-danger"><?= $mensagem ?></div>
+    <?php endif; ?>
+    <form method="POST" class="mt-3">
+        <div class="mb-3">
+            <label for="username" class="form-label">Usuário</label>
+            <input type="text" class="form-control" id="username" name="username" required>
+        </div>
+        <div class="mb-3">
+            <label for="password" class="form-label">Senha</label>
+            <input type="password" class="form-control" id="password" name="password" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Entrar</button>
+    </form>
 </body>
 </html>

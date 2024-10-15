@@ -1,50 +1,43 @@
 <?php
-require 'conexao.php'; // Inclui o arquivo de conexão
+require 'conexao.php';
 
-$stmt = $pdo->prepare("SELECT * FROM medicamentos");
-$stmt->execute();
-$medicamentos = $stmt->fetchAll(PDO::FETCH_ASSOC);
+$sql = "SELECT * FROM medicamentos";
+$result = $pdo->query($sql);
+$medicamentos = $result->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-    <title>Listar Medicamentos</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Listagem de Medicamentos</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
-<body>
-    <div class="container mt-5">
-        <h2>Lista de Medicamentos</h2>
-        <table class="table table-bordered">
-            <thead>
+<body class="container">
+    <h1 class="mt-5">Lista de Medicamentos</h1>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Nome</th>
+                <th>Preço</th>
+                <th>Quantidade</th>
+                <th>Categoria</th>
+                <th>Data de Validade</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php foreach ($medicamentos as $medicamento): ?>
                 <tr>
-                    <th>ID</th>
-                    <th>Nome</th>
-                    <th>Preço</th>
-                    <th>Quantidade</th>
-                    <th>Categoria</th>
-                    <th>Data de Validade</th>
+                    <td><?= $medicamento['nome'] ?></td>
+                    <td><?= number_format($medicamento['preco'], 2, ',', '.') ?></td>
+                    <td><?= $medicamento['quantidade'] ?></td>
+                    <td><?= $medicamento['categoria'] ?></td>
+                    <td><?= date('d/m/Y', strtotime($medicamento['data_validade'])) ?></td>
                 </tr>
-            </thead>
-            <tbody>
-                <?php foreach ($medicamentos as $medicamento): ?>
-                    <tr>
-                        <td><?php echo $medicamento['id']; ?></td>
-                        <td><?php echo $medicamento['nome']; ?></td>
-                        <td><?php echo number_format($medicamento['preco'], 2, ',', '.'); ?></td>
-                        <td><?php echo $medicamento['quantidade']; ?></td>
-                        <td><?php echo $medicamento['categoria']; ?></td>
-                        <td><?php echo date('d/m/Y', strtotime($medicamento['data_validade'])); ?></td>
-                    </tr>
-                <?php endforeach; ?>
-            </tbody>
-        </table>
-        <a href="index.php" class="btn btn-primary">Voltar</a>
-    </div>
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+            <?php endforeach; ?>
+        </tbody>
+    </table>
+    <a href="index.php" class="btn btn-secondary mt-3">Voltar</a>
 </body>
 </html>
