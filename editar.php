@@ -1,16 +1,37 @@
-<?php
+<?php 
 include 'conexao.php';
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+if(isset($_GET['id'])){
+    $id = $_GET['id'];
+
+    $sql= "SELECT FROM medicamentos WHERE id= :id";
+    $sql = $pdo->prepare($sql);
+    $sql->execute([':id' => $id]);
+    $produto = $sql->fetch(PDO::FETCH_ASSOC);
+
+    if(!$produto){
+        echo "Produto não encontrado";
+        exit;
+    }
+}
+if($_SERVER['REQUEST_METHOD']=='POST'){
     $nome = $_POST['nome'];
     $preco = $_POST['preco'];
     $quantidade = $_POST['quantidade'];
     $categoria = $_POST['categoria'];
     $data_validade = $_POST['data_validade'];
 
-    $sql = "INSERT INTO medicamentos (nome, preco, quantidade, categoria, data_validade) VALUES ('$nome', $preco, $quantidade, '$categoria', '$data_validade')";
-    $pdo->exec($sql);
-    $mensagem = "Medicamento cadastrado com sucesso!";
+    $sql="UPDATE produto SET nome=:nome,preco=:preco,quantidade=:quantidade,categoria=:categoria,data_validade=:data_validade WHERE id=:id";
+    $sql = $pdo->prepare($sql);
+    $sql->execute(params: [
+        ":nome"=> $nome,
+        "preco"=> $preco,
+        "quantidade"=> $quantidade,
+        "categoria"=> $categoria,
+        "data_validade"=> $data_validade,
+        "id"=> $id
+    ] );
+    echo "Medicamento atualizado com sucesso";
 }
 ?>
 
@@ -19,11 +40,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cadastro de Medicamentos</title>
+    <title>Editar Medicamento</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body class="container">
-    <h1 class="mt-5">Cadastrar de Medicamentos</h1>
+    <h1 class="mt-5">Editar de Medicamentos</h1>
     <?php if (isset($mensagem)): ?>
         <div class="alert alert-success"><?= $mensagem ?></div>
     <?php endif; ?>

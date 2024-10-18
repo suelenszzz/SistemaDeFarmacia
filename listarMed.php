@@ -1,5 +1,5 @@
 <?php
-require 'conexao.php';
+include 'conexao.php';
 
 $sql = "SELECT * FROM medicamentos";
 $result = $pdo->query($sql);
@@ -15,8 +15,8 @@ $medicamentos = $result->fetchAll(PDO::FETCH_ASSOC);
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body class="container">
-    <h1 class="mt-5">Lista de Medicamentos</h1>
-    <table class="table table-striped">
+    <h1 class="mt-5">Lista de Medicamentos</h1><br>
+    <table class="table table-striped" style="text-align:center">
         <thead>
             <tr>
                 <th>Nome</th>
@@ -35,9 +35,13 @@ $medicamentos = $result->fetchAll(PDO::FETCH_ASSOC);
                     <td><?= $medicamento['categoria'] ?></td>
                     <td><?= date('d/m/Y', strtotime($medicamento['data_validade'])) ?></td>
                 </tr>
+                
+
             <?php endforeach; ?>
         </tbody>
     </table>
+    <a href="editar.php?id=<?= $medicamento['id']?>" class="btn btn-warning mt-3">Editar</a>
+    <a href="deletar.php?id=<?= $medicamento['id']?>" class="btn btn-danger mt-3" onclick="return confirm('Tem certeza?');">Deletar</a>
     <a href="index.php" class="btn btn-secondary mt-3">Voltar</a>
 </body>
 </html>

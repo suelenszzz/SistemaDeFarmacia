@@ -1,8 +1,8 @@
 <?php
-require 'conexao.php';
+include 'conexao.php';
 
 $usuario_valido = 'admin';
-$senha_valida = '123456'; 
+$senha_valida = '1234'; 
 
 $mensagem = '';
 
